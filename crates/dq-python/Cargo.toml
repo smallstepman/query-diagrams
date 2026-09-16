@@ -1,0 +1,16 @@
+[package]
+name = "dq-python"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+name = "dq"
+crate-type = ["cdylib"]
+
+[dependencies]
+dq-core = { path = "../dq-core" }
+pyo3 = { version = "0.26", features = ["extension-module", "abi3-py39"] }
+
+[build-dependencies]
+pyo3-build-config = "0.26"

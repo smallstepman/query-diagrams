@@ -1,0 +1,4 @@
+view_group("a", "A").
+view_group("b", "B").
+view_contains("a", "group", "b", 10).
+view_contains("b", "group", "a", 10).

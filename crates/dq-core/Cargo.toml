@@ -1,0 +1,14 @@
+[package]
+name = "dq-core"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+mermaid-rs-parser.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+
+[target.'cfg(not(target_arch = "wasm32"))'.dependencies]
+oxirs-rule.workspace = true

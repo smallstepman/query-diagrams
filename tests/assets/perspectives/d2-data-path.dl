@@ -1,0 +1,8 @@
+selected(N) :- prop("node", N, "dq.role", "service").
+selected(N) :- prop("node", N, "dq.role", "data").
+
+view_node(N, N) :- selected(N).
+view_edge(E, E, A, B) :- edge(E, K, A, B, L, D), selected(A), selected(B).
+view_style("node", N, "stroke", "#7c3aed", 40) :- selected(N).
+view_style("edge", E, "stroke", "#7c3aed", 40) :- view_edge(E, R, A, B).
+view_option("direction", "TB", 100).

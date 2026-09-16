@@ -1,0 +1,44 @@
+direction: "up"
+
+"outer": "Outer & <boundary>" {
+  style.stroke: "#0f172a"
+  "left": "Left: strict" {
+    "api-left": "API: v2 | \"blue\"" {
+      shape: "hexagon"
+      style.font-color: "#0f172a"
+      style.stroke: "#dc2626"
+    }
+  }
+  "right": "Right | winner" {
+    "alert": "Alert <read-only> & \"quoted\"" {
+      style.border-radius: 8
+      style.stroke: "#dc2626"
+      style.fill: "#fecaca"
+    }
+    "api-right": "API: v2 | \"blue\"" {
+      shape: "hexagon"
+      style.font-color: "#111827"
+    }
+  }
+}
+
+"outside-copy": "Outside & <untrusted> #1" {
+  shape: "hexagon"
+  style.fill: "#fff7cc"
+  link: "https://example.test/path?mode=read#fragment"
+  tooltip: "Colon: pipe | hash # and arrow -> stay literal"
+}
+
+"outside-copy" -> "outer"."left"."api-left": "calls \"escaped\" <api>" {
+  style.stroke-dash: "4"
+}
+"outer"."right"."alert" -> "outer"."right"."api-right": "watch | inspect: #1" {
+  style.stroke-dash: "5"
+}
+"__dq_note_alert_note": "Review <this> & \"quote\"" {
+  shape: text
+  style.fill: "#fff7cc"
+}
+"__dq_note_alert_note" -- "outer"."left"."api-left" {
+  style.stroke-dash: 3
+}

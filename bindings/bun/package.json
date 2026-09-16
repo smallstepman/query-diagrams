@@ -1,0 +1,13 @@
+{
+  "name": "dq-bun",
+  "version": "0.1.0",
+  "description": "Bun Node-API binding for dq",
+  "main": "./index.js",
+  "types": "./index.d.ts",
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "dq.node"
+  ],
+  "license": "MIT"
+}

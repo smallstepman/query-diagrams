@@ -1,0 +1,51 @@
+direction: "left"
+
+"system": "Core \"System\" & <trusted>" {
+  style.stroke: "#0f172a"
+  "api": "API: v2 | \"blue\"" {
+    shape: "hexagon"
+    style.font-color: "#111827"
+    style.stroke: "#dc2626"
+  }
+  "nested": "Nested Group" {
+    style.stroke: "#0f172a"
+    "inner": "Inner node" {
+      shape: "circle"
+      style.stroke: "#475569"
+    }
+  }
+  "records": "Record Store" {
+    shape: "sql_table"
+    style.stroke: "#475569"
+    "request:id": "uuid"
+    "display name": "text:nullable"
+  }
+}
+
+"outside": "Outside & <untrusted> #1" {
+  shape: "hexagon"
+  style.fill: "#fff7cc"
+  style.stroke: "#dc2626"
+  link: "https://example.test/path?mode=read#fragment"
+  tooltip: "Colon: pipe | hash # and arrow -> stay literal"
+}
+
+"system"."api" -> "system"."records": "write: primary | audit #1" {
+  style.stroke: "#2563eb"
+  style.stroke-dash: "5"
+}
+"outside" -> "system"."api": "calls: API | v2" {
+  style.stroke: "#2563eb"
+}
+"outside" -> "system"."api": "reverse operator" {
+  style.stroke: "#2563eb"
+}
+"outside" --> "system"."records": "long reverse" {
+  style.stroke: "#2563eb"
+}
+"system"."api" <-> "system"."records": "duplex" {
+  style.stroke: "#2563eb"
+}
+"system"."records" -- "outside": "replica # remains" {
+  style.stroke: "#2563eb"
+}

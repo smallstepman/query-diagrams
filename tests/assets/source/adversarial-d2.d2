@@ -1,0 +1,44 @@
+# Leading comments and trailing comments must not alter quoted literals.
+direction: left # D2 spelling, not Mermaid's RL
+theme: "neutral # still literal"
+
+outside: "Outside & <untrusted> #1" {
+  shape: hexagon
+  dq.role: external
+  tooltip: "Colon: pipe | hash # and arrow -> stay literal"
+  link: "https://example.test/path?mode=read#fragment"
+  style.fill: "#fff7cc"
+}
+
+system: "Core \"System\" & <trusted>" {
+  style.stroke: "#0f172a"
+
+  api: "API: v2 | \"blue\"" {
+    shape: hexagon
+    dq.role: service
+    style.font-color: "#111827"
+  }
+
+  records: "Record Store" {
+    shape: sql_table
+    "request:id": "uuid"
+    "display name": "text:nullable"
+  }
+
+  nested: "Nested Group" {
+    inner: "Inner node" {
+      shape: circle
+    }
+  }
+
+  api -> records: "write: primary | audit #1" {
+    style.stroke: "#a855f7"
+    style.stroke-dash: 5
+  }
+}
+
+outside -> system.api: "calls: API | v2"
+system.api <- outside: "reverse operator"
+system.records <-- outside: "long reverse"
+system.api <-> system.records: "duplex"
+system.records -- outside: "replica # remains"

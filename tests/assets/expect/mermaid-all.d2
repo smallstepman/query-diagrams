@@ -1,0 +1,70 @@
+direction: "right"
+
+"clients": "Client Applications" {
+  style.stroke: "#94a3b8"
+  "mobile": "Mobile App" {
+    style.border-radius: 20
+    style.stroke: "#334155"
+  }
+  "web": "Web Console" {
+    style.border-radius: 20
+    style.stroke: "#334155"
+  }
+}
+
+"platform": "Commerce Platform" {
+  style.stroke: "#94a3b8"
+  "data": "Data Plane" {
+    style.stroke: "#94a3b8"
+    "cache": "Session Cache" {
+      shape: "cylinder"
+      style.stroke: "#334155"
+    }
+    "primary": "Primary Database" {
+      shape: "cylinder"
+      style.stroke: "#334155"
+    }
+  }
+  "ingress": "API Gateway" {
+    shape: "hexagon"
+    style.stroke: "#334155"
+  }
+  "services": "Service Mesh" {
+    style.stroke: "#94a3b8"
+    "auth": "Identity Service" {
+      style.stroke: "#334155"
+    }
+    "catalog": "Catalog Service" {
+      style.stroke: "#334155"
+    }
+    "worker": "Event Worker" {
+      style.stroke: "#334155"
+    }
+  }
+}
+
+
+"clients"."web" -> "platform"."ingress": "HTTPS" {
+  style.stroke: "#64748b"
+}
+"clients"."mobile" -> "platform"."ingress": "HTTPS" {
+  style.stroke: "#64748b"
+}
+"platform"."ingress" -> "platform"."services"."auth": "authenticate" {
+  style.stroke: "#64748b"
+}
+"platform"."ingress" -> "platform"."services"."catalog": "browse" {
+  style.stroke: "#64748b"
+}
+"platform"."services"."auth" -> "platform"."data"."primary": "profile lookup" {
+  style.stroke: "#64748b"
+}
+"platform"."services"."catalog" -> "platform"."data"."cache": "invalidate" {
+  style.stroke: "#64748b"
+}
+"platform"."services"."catalog" -> "platform"."services"."worker": "publish event" {
+  style.stroke: "#64748b"
+}
+"platform"."services"."worker" -> "platform"."data"."primary": "record event" {
+  style.stroke: "#64748b"
+}

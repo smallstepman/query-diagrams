@@ -1,0 +1,8 @@
+view_node(N, N) :- node(N, K, L, S).
+view_group(G, L) :- group(G, L).
+view_contains(G, K, I, 10) :- contains(G, K, I).
+view_edge(E, E, A, B) :- edge(E, K, A, B, L, D), view_node(A, A), view_node(B, B).
+view_style("node", N, "stroke", "#334155", 20) :- view_node(N, E).
+view_style("group", G, "stroke", "#94a3b8", 20) :- view_group(G, L).
+view_style("edge", E, "stroke", "#64748b", 20) :- view_edge(E, R, A, B).
+view_option("direction", "LR", 100).

@@ -1,0 +1,30 @@
+direction: "left"
+
+"outer_shell": "Outer shell" {
+  style.stroke: "#0f172a"
+  "middle_layer": "Middle layer" {
+    style.stroke: "#0f172a"
+    "leaf_layer": "Leaf layer" {
+      style.stroke: "#0f172a"
+      "api_v2": "API: v2 | blue" {
+        shape: "hexagon"
+        style.stroke: "#dc2626"
+      }
+      "db_1": "DB <primary> & #1" {
+        shape: "cylinder"
+        style.stroke: "#475569"
+      }
+    }
+  }
+}
+
+"outside_node": "Outside # fragment" {
+  style.stroke: "#475569"
+}
+
+"outer_shell"."middle_layer"."leaf_layer"."api_v2" -> "outer_shell"."middle_layer"."leaf_layer"."db_1": "call: quoted #1" {
+  style.stroke: "#2563eb"
+}
+"outer_shell"."middle_layer"."leaf_layer"."db_1" -- "outside_node": "replica & failover" {
+  style.stroke: "#2563eb"
+}

@@ -1,0 +1,37 @@
+direction: "down"
+
+"platform.data.cache": "Session Cache" {
+  shape: "cylinder"
+  style.fill: "#dcfce7"
+  style.stroke: "#7c3aed"
+}
+"platform.data.primary": "Primary Database" {
+  shape: "cylinder"
+  style.fill: "#dcfce7"
+  style.stroke: "#7c3aed"
+}
+"platform.services.auth": "Identity Service" {
+  style.fill: "#ede9fe"
+  style.stroke: "#7c3aed"
+}
+"platform.services.catalog": "Catalog Service" {
+  style.fill: "#ede9fe"
+  style.stroke: "#7c3aed"
+}
+"platform.services.worker": "Event Worker" {
+  style.fill: "#ede9fe"
+  style.stroke: "#7c3aed"
+}
+
+"platform.services.auth" -> "platform.data.primary": "profile lookup" {
+  style.stroke: "#7c3aed"
+}
+"platform.services.catalog" -> "platform.data.cache": "invalidate" {
+  style.stroke: "#7c3aed"
+}
+"platform.services.catalog" -> "platform.services.worker": "publish event" {
+  style.stroke: "#7c3aed"
+}
+"platform.services.worker" -> "platform.data.primary": "record event" {
+  style.stroke: "#7c3aed"
+}

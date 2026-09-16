@@ -1,0 +1,15 @@
+flowchart LR
+    dq_auth_6757504473885210447["Identity Service"]
+    dq_ingress_12974027923979589528{{"API Gateway"}}
+    dq_mobile_2056304897618586423(["Mobile App"])
+    dq_web_6818697334544801521(["Web Console"])
+    dq_web_6818697334544801521 -->|HTTPS| dq_ingress_12974027923979589528
+    dq_mobile_2056304897618586423 -->|HTTPS| dq_ingress_12974027923979589528
+    dq_ingress_12974027923979589528 -->|authenticate| dq_auth_6757504473885210447
+    style dq_auth_6757504473885210447 fill:#dbeafe
+    style dq_ingress_12974027923979589528 fill:#dbeafe
+    style dq_mobile_2056304897618586423 fill:#dbeafe
+    style dq_web_6818697334544801521 fill:#dbeafe
+    linkStyle 0 stroke:#2563eb
+    linkStyle 1 stroke:#2563eb
+    linkStyle 2 stroke:#2563eb

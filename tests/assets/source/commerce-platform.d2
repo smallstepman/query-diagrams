@@ -1,0 +1,69 @@
+direction: right
+
+platform: Commerce Platform {
+  style.fill: "#f8fafc"
+  style.stroke: "#475569"
+
+  ingress: API Gateway {
+    shape: hexagon
+    dq.role: public
+    style.fill: "#dbeafe"
+  }
+
+  services: Service Mesh {
+    style.fill: "#f1f5f9"
+
+    auth: Identity Service {
+      shape: rectangle
+      dq.role: service
+      style.fill: "#ede9fe"
+    }
+    catalog: Catalog Service {
+      shape: rectangle
+      dq.role: service
+      style.fill: "#ede9fe"
+    }
+    worker: Event Worker {
+      shape: rectangle
+      dq.role: service
+      style.fill: "#ede9fe"
+    }
+  }
+
+  data: Data Plane {
+    primary: Primary Database {
+      shape: cylinder
+      dq.role: data
+      style.fill: "#dcfce7"
+    }
+    cache: Session Cache {
+      shape: cylinder
+      dq.role: data
+      style.fill: "#dcfce7"
+    }
+  }
+}
+
+clients: Client Applications {
+  web: Web Console {
+    shape: rectangle
+    style.border-radius: 8
+    dq.role: client
+    style.fill: "#fef3c7"
+  }
+  mobile: Mobile App {
+    shape: rectangle
+    style.border-radius: 8
+    dq.role: client
+    style.fill: "#fef3c7"
+  }
+}
+
+clients.web -> platform.ingress: HTTPS
+clients.mobile -> platform.ingress: HTTPS
+platform.ingress -> platform.services.auth: authenticate
+platform.ingress -> platform.services.catalog: browse
+platform.services.auth -> platform.data.primary: profile lookup
+platform.services.catalog -> platform.data.cache: invalidate
+platform.services.catalog -> platform.services.worker: publish event
+platform.services.worker -> platform.data.primary: record event

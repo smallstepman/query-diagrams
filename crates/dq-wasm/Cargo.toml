@@ -1,0 +1,13 @@
+[package]
+name = "dq-wasm"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[lib]
+crate-type = ["cdylib", "rlib"]
+
+[dependencies]
+dq-core = { path = "../dq-core", default-features = false }
+wasm-bindgen = "0.2"
+getrandom = { version = "0.2", features = ["js"] }

@@ -1,0 +1,2 @@
+view_new_node("known", "node", "Known", "rectangle").
+view_note("missing-note", "node", "missing", "dangling", "right", 10).

@@ -1,0 +1,15 @@
+%% Header detection must skip Mermaid comments for extensionless input.
+flowchart RL
+    subgraph outer_shell["Outer shell"]
+        direction TB
+        subgraph middle_layer["Middle layer"]
+            subgraph leaf_layer["Leaf layer"]
+                api_v2{{"API: v2 | blue"}}
+                db_1[("DB <primary> & #1")]
+            end
+        end
+    end
+
+    outside_node["Outside # fragment"]
+    api_v2 -->|call: quoted #1| db_1
+    db_1 ---|replica & failover| outside_node

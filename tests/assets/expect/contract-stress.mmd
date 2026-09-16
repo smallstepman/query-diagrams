@@ -1,0 +1,24 @@
+flowchart BT
+    subgraph dq_outer_3523764787506715604["Outer &amp; &lt;boundary&gt;"]
+        subgraph dq_left_2643736872316312752["Left: strict"]
+            dq_api_left_17600779092021833387{{"API: v2 | &quot;blue&quot;"}}
+        end
+        subgraph dq_right_8550834117436299269["Right | winner"]
+            dq_alert_3231451184902147449("Alert &lt;read-only&gt; &amp; &quot;quoted&quot;")
+            dq_api_right_13478003282211592116{{"API: v2 | &quot;blue&quot;"}}
+        end
+    end
+    dq_outside_copy_13073627332479264914{{"Outside &amp; &lt;untrusted&gt; #1"}}
+    dq_note_0["Review &lt;this&gt; &amp; &quot;quote&quot;"]
+    dq_outside_copy_13073627332479264914 -->|calls &quot;escaped&quot; &lt;api&gt;| dq_api_left_17600779092021833387
+    dq_alert_3231451184902147449 -->|watch #124; inspect: #1| dq_api_right_13478003282211592116
+    dq_note_0 -.-> dq_api_left_17600779092021833387
+    class dq_alert_3231451184902147449 critical
+    style dq_alert_3231451184902147449 fill:#fee2e2,stroke:#dc2626
+    style dq_api_left_17600779092021833387 color:#0f172a,stroke:#dc2626
+    style dq_api_right_13478003282211592116 color:#111827
+    style dq_outside_copy_13073627332479264914 fill:#fff7cc
+    style dq_outer_3523764787506715604 stroke:#0f172a
+    linkStyle 0 stroke-dasharray:4
+    linkStyle 1 stroke-dasharray:3
+    style dq_note_0 fill:#fff7cc,stroke:#a58b00,stroke-dasharray:3 3

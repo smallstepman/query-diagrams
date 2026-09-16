@@ -1,0 +1,45 @@
+flowchart LR
+    subgraph dq_clients_7649887508575031031["Client Applications"]
+        dq_clients_mobile_16606606879662477325["Mobile App"]
+        dq_clients_web_13107868018894422883["Web Console"]
+    end
+    subgraph dq_platform_4488915525503302354["Commerce Platform"]
+        subgraph dq_platform_data_12872285082312341276["Data Plane"]
+            dq_platform_data_cache_8802149710857280820[("Session Cache")]
+            dq_platform_data_primary_3484783730876203048[("Primary Database")]
+        end
+        dq_platform_ingress_16778455166373003363{{"API Gateway"}}
+        subgraph dq_platform_services_7042798079776019196["Service Mesh"]
+            dq_platform_services_auth_1009813149765682588["Identity Service"]
+            dq_platform_services_catalog_7566382110227897853["Catalog Service"]
+            dq_platform_services_worker_18078606675906013080["Event Worker"]
+        end
+    end
+    dq_clients_web_13107868018894422883 -->|HTTPS| dq_platform_ingress_16778455166373003363
+    dq_clients_mobile_16606606879662477325 -->|HTTPS| dq_platform_ingress_16778455166373003363
+    dq_platform_ingress_16778455166373003363 -->|authenticate| dq_platform_services_auth_1009813149765682588
+    dq_platform_ingress_16778455166373003363 -->|browse| dq_platform_services_catalog_7566382110227897853
+    dq_platform_services_auth_1009813149765682588 -->|profile lookup| dq_platform_data_primary_3484783730876203048
+    dq_platform_services_catalog_7566382110227897853 -->|invalidate| dq_platform_data_cache_8802149710857280820
+    dq_platform_services_catalog_7566382110227897853 -->|publish event| dq_platform_services_worker_18078606675906013080
+    dq_platform_services_worker_18078606675906013080 -->|record event| dq_platform_data_primary_3484783730876203048
+    style dq_clients_mobile_16606606879662477325 fill:#fef3c7,stroke:#334155
+    style dq_clients_web_13107868018894422883 fill:#fef3c7,stroke:#334155
+    style dq_platform_data_cache_8802149710857280820 fill:#dcfce7,stroke:#334155
+    style dq_platform_data_primary_3484783730876203048 fill:#dcfce7,stroke:#334155
+    style dq_platform_ingress_16778455166373003363 fill:#dbeafe,stroke:#334155
+    style dq_platform_services_auth_1009813149765682588 fill:#ede9fe,stroke:#334155
+    style dq_platform_services_catalog_7566382110227897853 fill:#ede9fe,stroke:#334155
+    style dq_platform_services_worker_18078606675906013080 fill:#ede9fe,stroke:#334155
+    style dq_clients_7649887508575031031 stroke:#94a3b8
+    style dq_platform_4488915525503302354 fill:#f8fafc,stroke:#94a3b8
+    style dq_platform_data_12872285082312341276 stroke:#94a3b8
+    style dq_platform_services_7042798079776019196 fill:#f1f5f9,stroke:#94a3b8
+    linkStyle 0 stroke:#64748b
+    linkStyle 1 stroke:#64748b
+    linkStyle 2 stroke:#64748b
+    linkStyle 3 stroke:#64748b
+    linkStyle 4 stroke:#64748b
+    linkStyle 5 stroke:#64748b
+    linkStyle 6 stroke:#64748b
+    linkStyle 7 stroke:#64748b

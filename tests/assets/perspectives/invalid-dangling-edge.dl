@@ -1,0 +1,2 @@
+view_new_node("known", "node", "Known", "rectangle").
+view_new_edge("broken", "known", "missing", "relation", "dangling").

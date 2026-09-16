@@ -1,0 +1,7 @@
+/target
+*.so
+*.dylib
+*.dll
+*.node
+*.wasm
+__pycache__/

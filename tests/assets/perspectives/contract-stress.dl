@@ -1,0 +1,36 @@
+view_node("api-left", "system.api").
+view_node("api-right", "system.api").
+view_node("outside-copy", "outside").
+view_new_node("alert", "annotation", "Alert <read-only> & \"quoted\"", "rounded").
+
+view_group("outer", "Outer & <boundary>").
+view_group("left", "Left: strict").
+view_group("right", "Right | winner").
+view_contains("outer", "group", "left", 10).
+view_contains("outer", "group", "right", 10).
+view_contains("left", "node", "api-left", 10).
+view_contains("left", "node", "api-right", 1).
+view_contains("right", "node", "api-right", 20).
+view_contains("right", "node", "alert", 10).
+
+view_new_edge("notice", "alert", "api-right", "annotation", "watch | inspect: #1").
+view_new_edge("cross", "outside-copy", "api-left", "relation", "calls \"escaped\" <api>").
+
+view_style("node", "api-left", "stroke", "#475569", 1).
+view_style("node", "api-left", "stroke", "#dc2626", 100).
+view_style("node", "api-left", "font_color", "#0f172a", 200).
+view_style("node", "alert", "fill", "#fee2e2", 10).
+view_style("node", "alert", "stroke", "#dc2626", 10).
+view_style("edge", "notice", "stroke_dash", "3", 10).
+view_style("edge", "cross", "stroke_dasharray", "2", 10).
+view_style("edge", "cross", "stroke_dash", "4", 20).
+view_style("group", "outer", "stroke", "#0f172a", 10).
+
+view_native("d2", "node", "alert", "style.fill", "#fecaca", 20).
+view_native("d2", "edge", "notice", "style.stroke-dash", "5", 20).
+view_native("mermaid", "node", "alert", "class", "critical", 20).
+view_native("mermaid", "node", "alert", "style", "fill:#fee2e2,stroke:#dc2626", 30).
+
+view_note("alert-note", "node", "api-left", "Review <this> & \"quote\"", "right", 10).
+view_option("direction", "LR", 1).
+view_option("direction", "BT", 100).

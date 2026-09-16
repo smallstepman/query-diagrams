@@ -1,0 +1,3 @@
+view_node("api", "system.api").
+view_style("node", "api", "stroke", "#dc2626", 10).
+view_style("node", "api", "stroke", "#2563eb", 10).

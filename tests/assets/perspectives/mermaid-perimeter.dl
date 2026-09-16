@@ -1,0 +1,10 @@
+perimeter(N) :- node(N, K, "Web Console", S).
+perimeter(N) :- node(N, K, "Mobile App", S).
+perimeter(N) :- node(N, K, "API Gateway", S).
+perimeter(N) :- node(N, K, "Identity Service", S).
+
+view_node(N, N) :- perimeter(N).
+view_edge(E, E, A, B) :- edge(E, K, A, B, L, D), perimeter(A), perimeter(B).
+view_style("node", N, "fill", "#dbeafe", 40) :- perimeter(N).
+view_style("edge", E, "stroke", "#2563eb", 40) :- view_edge(E, R, A, B).
+view_option("direction", "LR", 100).

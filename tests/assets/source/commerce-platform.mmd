@@ -1,0 +1,33 @@
+flowchart LR
+    subgraph clients["Client Applications"]
+        web(["Web Console"])
+        mobile(["Mobile App"])
+    end
+
+    subgraph platform["Commerce Platform"]
+        ingress{{"API Gateway"}}
+
+        subgraph services["Service Mesh"]
+            auth["Identity Service"]
+            catalog["Catalog Service"]
+            worker["Event Worker"]
+        end
+
+        subgraph data["Data Plane"]
+            primary[("Primary Database")]
+            cache[("Session Cache")]
+        end
+    end
+
+    web -->|HTTPS| ingress
+    mobile -->|HTTPS| ingress
+    ingress -->|authenticate| auth
+    ingress -->|browse| catalog
+    auth -->|profile lookup| primary
+    catalog -->|invalidate| cache
+    catalog -->|publish event| worker
+    worker -->|record event| primary
+
+    style ingress fill:#dbeafe,stroke:#2563eb
+    style primary fill:#dcfce7,stroke:#16a34a
+    style cache fill:#dcfce7,stroke:#16a34a

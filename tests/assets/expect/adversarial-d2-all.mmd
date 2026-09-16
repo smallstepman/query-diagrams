@@ -1,0 +1,27 @@
+flowchart RL
+    subgraph dq_system_13814046143737672956["Core &quot;System&quot; &amp; &lt;trusted&gt;"]
+        dq_system_api_6244207726671738850{{"API: v2 | &quot;blue&quot;"}}
+        subgraph dq_system_nested_15199257289393118345["Nested Group"]
+            dq_system_nested_inner_12554971154950307495(("Inner node"))
+        end
+        dq_system_records_3451166281955840672["Record Store<br/>request:id: uuid<br/>display name: text:nullable"]
+    end
+    dq_outside_600786327658092260{{"Outside &amp; &lt;untrusted&gt; #1"}}
+    dq_system_api_6244207726671738850 -->|write: primary #124; audit #1| dq_system_records_3451166281955840672
+    dq_outside_600786327658092260 -->|calls: API #124; v2| dq_system_api_6244207726671738850
+    dq_outside_600786327658092260 -->|reverse operator| dq_system_api_6244207726671738850
+    dq_outside_600786327658092260 -->|long reverse| dq_system_records_3451166281955840672
+    dq_system_api_6244207726671738850 -->|duplex| dq_system_records_3451166281955840672
+    dq_system_records_3451166281955840672 ---|replica # remains| dq_outside_600786327658092260
+    style dq_outside_600786327658092260 fill:#fff7cc,stroke:#dc2626
+    style dq_system_api_6244207726671738850 color:#111827,stroke:#dc2626
+    style dq_system_nested_inner_12554971154950307495 stroke:#475569
+    style dq_system_records_3451166281955840672 stroke:#475569
+    style dq_system_13814046143737672956 stroke:#0f172a
+    style dq_system_nested_15199257289393118345 stroke:#0f172a
+    linkStyle 0 stroke:#2563eb,stroke-dasharray:5
+    linkStyle 1 stroke:#2563eb
+    linkStyle 2 stroke:#2563eb
+    linkStyle 3 stroke:#2563eb
+    linkStyle 4 stroke:#2563eb
+    linkStyle 5 stroke:#2563eb
