@@ -1,0 +1,62 @@
+openapi: 3.1.0
+info:
+  title: Snake Game API
+  version: 1.0.0
+paths:
+  /v1/games/{game_id}/moves:
+    post:
+      operationId: submitMove
+      summary: Submit one player move
+      x-arch-id: contract://http/game-api/submit-move
+      parameters:
+        - name: game_id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MoveRequest'
+      responses:
+        '202':
+          description: Move recorded
+        '400':
+          description: Invalid move
+  /v1/scoreboard:
+    get:
+      operationId: getScoreboard
+      summary: Read the current scoreboard
+      x-arch-id: contract://http/game-api/get-scoreboard
+      responses:
+        '200':
+          description: Current scores
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ScoreEntry'
+components:
+  schemas:
+    Direction:
+      type: string
+      enum: [up, down, left, right]
+    MoveRequest:
+      type: object
+      required: [player_id, direction]
+      properties:
+        player_id:
+          type: string
+        direction:
+          $ref: '#/components/schemas/Direction'
+    ScoreEntry:
+      type: object
+      required: [player_id, score]
+      properties:
+        player_id:
+          type: string
+        score:
+          type: integer

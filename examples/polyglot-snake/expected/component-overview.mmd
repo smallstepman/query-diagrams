@@ -1,0 +1,48 @@
+flowchart LR
+    subgraph dq_contracts_18314575617815111536["HTTP contracts"]
+        dq_contracts_get_scoreboard_6237516921235096133{{"GET /v1/scoreboard"}}
+        dq_contracts_submit_move_11046259526442527102{{"POST /v1/games/{game_id}/moves"}}
+    end
+    subgraph dq_postgres_4257408974327174830["PostgreSQL"]
+        dq_postgres_score_events_13805139543050138578[("public.score_events")]
+        dq_postgres_scoreboard_13956281663795589106[("public.scoreboard")]
+        dq_postgres_snake_postgres_5472965964955060262[("Snake PostgreSQL")]
+    end
+    subgraph dq_python_5848678681452990231["Python / Dagster"]
+        dq_python_scoreboard_analysis_2987231455688062684["Dagster scoreboard analysis"]
+    end
+    subgraph dq_rust_13834740431434729255["Rust / Axum"]
+        dq_rust_game_server_17293269884008166261["Axum game server"]
+    end
+    subgraph dq_typescript_17590752136195828226["TypeScript / React"]
+        dq_typescript_web_client_13523087708315839064["React web client"]
+    end
+    dq_typescript_web_client_13523087708315839064 -->|consumes| dq_contracts_submit_move_11046259526442527102
+    dq_typescript_web_client_13523087708315839064 -->|consumes| dq_contracts_get_scoreboard_6237516921235096133
+    dq_rust_game_server_17293269884008166261 -->|provides| dq_contracts_submit_move_11046259526442527102
+    dq_rust_game_server_17293269884008166261 -->|provides| dq_contracts_get_scoreboard_6237516921235096133
+    dq_rust_game_server_17293269884008166261 -->|writes| dq_postgres_score_events_13805139543050138578
+    dq_python_scoreboard_analysis_2987231455688062684 -->|reads| dq_postgres_score_events_13805139543050138578
+    dq_python_scoreboard_analysis_2987231455688062684 -->|writes| dq_postgres_scoreboard_13956281663795589106
+    dq_rust_game_server_17293269884008166261 -->|reads| dq_postgres_scoreboard_13956281663795589106
+    style dq_contracts_get_scoreboard_6237516921235096133 fill:#e9d5ff
+    style dq_contracts_submit_move_11046259526442527102 fill:#e9d5ff
+    style dq_postgres_score_events_13805139543050138578 fill:#cbd5e1
+    style dq_postgres_scoreboard_13956281663795589106 fill:#cbd5e1
+    style dq_postgres_snake_postgres_5472965964955060262 fill:#cbd5e1
+    style dq_python_scoreboard_analysis_2987231455688062684 fill:#bbf7d0
+    style dq_rust_game_server_17293269884008166261 fill:#fed7aa
+    style dq_typescript_web_client_13523087708315839064 fill:#dbeafe
+    style dq_contracts_18314575617815111536 fill:#faf5ff
+    style dq_postgres_4257408974327174830 fill:#f8fafc
+    style dq_python_5848678681452990231 fill:#f0fdf4
+    style dq_rust_13834740431434729255 fill:#fff7ed
+    style dq_typescript_17590752136195828226 fill:#eff6ff
+    linkStyle 0 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 1 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 2 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 3 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 4 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 5 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 6 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 7 stroke:#0f766e,stroke-dasharray:4

@@ -1,0 +1,7 @@
+.architecture/
+node_modules/
+target/
+.venv/
+__pycache__/
+*.py[cod]
+*.scip

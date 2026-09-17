@@ -33,6 +33,12 @@ bodies, styles, metadata and edges. It does not yet implement every compiler
 feature of the D2 language (imports, variables, globs, substitutions, etc.).
 The frontend boundary is isolated so an official semantic adapter can replace it.
 
+## Architecture-indexing example
+
+| Example | Scope |
+| --- | --- |
+| [`examples/polyglot-snake`](examples/polyglot-snake/) | Independent TypeScript/Rust/Python/OpenAPI/PostgreSQL reference with real SCIP extraction and `dq` perspectives; no collector or `dq` semantic change. |
+
 ## Supported structural families
 
 All of these normalize to the same graph/view contract:

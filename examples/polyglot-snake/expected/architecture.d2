@@ -1,0 +1,185 @@
+direction: right
+
+typescript: "TypeScript / React" {
+  dq.layer: frontend
+  dq.component: "component://web-client"
+
+  web_client: "React web client" {
+    shape: rectangle
+    dq.level: component
+    dq.id: "component://web-client"
+    dq.layer: frontend
+  }
+  game_board: GameBoard {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/web/src/GameBoard.tsx#GameBoard"
+    dq.component: "component://web-client"
+    dq.language: typescript
+  }
+  submit_move: submitMove {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/web/src/api.ts#submitMove"
+    dq.component: "component://web-client"
+    dq.language: typescript
+  }
+  scoreboard: Scoreboard {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/web/src/Scoreboard.tsx#Scoreboard"
+    dq.component: "component://web-client"
+    dq.language: typescript
+  }
+  fetch_scoreboard: fetchScoreboard {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/web/src/api.ts#fetchScoreboard"
+    dq.component: "component://web-client"
+    dq.language: typescript
+  }
+}
+
+rust: "Rust / Axum" {
+  dq.layer: backend
+  dq.component: "component://game-server"
+
+  game_server: "Axum game server" {
+    shape: rectangle
+    dq.level: component
+    dq.id: "component://game-server"
+    dq.layer: backend
+  }
+  post_move: post_move {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/server/src/http.rs#post_move"
+    dq.component: "component://game-server"
+    dq.language: rust
+  }
+  apply_move: "GameService::apply_move" {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/server/src/game.rs#GameService.apply_move"
+    dq.component: "component://game-server"
+    dq.language: rust
+  }
+  append_move: "ScoreEventRepository::append_move" {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/server/src/repository.rs#ScoreEventRepository.append_move"
+    dq.component: "component://game-server"
+    dq.language: rust
+  }
+  get_scoreboard: get_scoreboard {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/server/src/http.rs#get_scoreboard"
+    dq.component: "component://game-server"
+    dq.language: rust
+  }
+  load_scoreboard: "ScoreboardRepository::load" {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/server/src/repository.rs#ScoreboardRepository.load"
+    dq.component: "component://game-server"
+    dq.language: rust
+  }
+}
+
+python: "Python / Dagster" {
+  dq.layer: pipeline
+  dq.component: "component://scoreboard-analysis"
+
+  scoreboard_analysis: "Dagster scoreboard analysis" {
+    shape: rectangle
+    dq.level: component
+    dq.id: "component://scoreboard-analysis"
+    dq.layer: pipeline
+  }
+  scoreboard_rollup: scoreboard_rollup {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/scoreboard/src/snake_scoreboard/assets.py#scoreboard_rollup"
+    dq.component: "component://scoreboard-analysis"
+    dq.language: python
+  }
+  calculate_scores: calculate_scores {
+    shape: rectangle
+    dq.level: code
+    dq.id: "code://snake/scoreboard/src/snake_scoreboard/compute.py#calculate_scores"
+    dq.component: "component://scoreboard-analysis"
+    dq.language: python
+  }
+}
+
+contracts: "HTTP contracts" {
+  submit_move: "POST /v1/games/{game_id}/moves" {
+    shape: hexagon
+    dq.level: contract
+    dq.id: "contract://http/game-api/submit-move"
+    dq.kind: http.contract
+  }
+  get_scoreboard: "GET /v1/scoreboard" {
+    shape: hexagon
+    dq.level: contract
+    dq.id: "contract://http/game-api/get-scoreboard"
+    dq.kind: http.contract
+  }
+}
+
+postgres: PostgreSQL {
+  snake_postgres: "Snake PostgreSQL" {
+    shape: cylinder
+    dq.level: component
+    dq.id: "component://snake-postgres"
+    dq.layer: database
+  }
+  score_events: "public.score_events" {
+    shape: cylinder
+    dq.level: resource
+    dq.id: "data://postgres/snake/public/score_events"
+    dq.kind: postgres.table
+  }
+  scoreboard: "public.scoreboard" {
+    shape: cylinder
+    dq.level: resource
+    dq.id: "data://postgres/snake/public/scoreboard"
+    dq.kind: postgres.table
+  }
+}
+
+runtime: Runtime {
+  dagster: "Dagster snake deployment" {
+    shape: rectangle
+    dq.level: runtime
+    dq.id: "runtime://dagster/snake"
+    dq.kind: runtime
+  }
+}
+
+typescript.game_board -> typescript.submit_move: calls
+typescript.scoreboard -> typescript.fetch_scoreboard: calls
+rust.post_move -> rust.apply_move: calls
+rust.apply_move -> rust.append_move: calls
+rust.get_scoreboard -> rust.load_scoreboard: calls
+python.scoreboard_rollup -> python.calculate_scores: calls
+
+typescript.submit_move -> contracts.submit_move: consumes
+typescript.fetch_scoreboard -> contracts.get_scoreboard: consumes
+rust.post_move -> contracts.submit_move: provides
+rust.get_scoreboard -> contracts.get_scoreboard: provides
+rust.append_move -> postgres.score_events: writes
+python.scoreboard_rollup -> postgres.score_events: reads
+python.scoreboard_rollup -> postgres.scoreboard: writes
+rust.load_scoreboard -> postgres.scoreboard: reads
+
+typescript.web_client -> contracts.submit_move: consumes
+typescript.web_client -> contracts.get_scoreboard: consumes
+rust.game_server -> contracts.submit_move: provides
+rust.game_server -> contracts.get_scoreboard: provides
+rust.game_server -> postgres.score_events: writes
+python.scoreboard_analysis -> postgres.score_events: reads
+python.scoreboard_analysis -> postgres.scoreboard: writes
+rust.game_server -> postgres.scoreboard: reads
+python.scoreboard_analysis -> runtime.dagster: "runs on"

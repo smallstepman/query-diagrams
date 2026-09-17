@@ -1,0 +1,74 @@
+flowchart LR
+    subgraph dq_contracts_18314575617815111536["HTTP contracts"]
+        dq_contracts_get_scoreboard_6237516921235096133{{"GET /v1/scoreboard"}}
+        dq_contracts_submit_move_11046259526442527102{{"POST /v1/games/{game_id}/moves"}}
+    end
+    subgraph dq_postgres_4257408974327174830["PostgreSQL"]
+        dq_postgres_score_events_13805139543050138578[("public.score_events")]
+        dq_postgres_scoreboard_13956281663795589106[("public.scoreboard")]
+    end
+    subgraph dq_python_5848678681452990231["Python / Dagster"]
+        dq_python_calculate_scores_16618218432669764009["calculate_scores"]
+        dq_python_scoreboard_rollup_16369290919900694612["scoreboard_rollup"]
+    end
+    subgraph dq_rust_13834740431434729255["Rust / Axum"]
+        dq_rust_append_move_9732948563544519913["ScoreEventRepository::append_move"]
+        dq_rust_apply_move_11777149626505909155["GameService::apply_move"]
+        dq_rust_get_scoreboard_4805843812433240324["get_scoreboard"]
+        dq_rust_load_scoreboard_11564804444726144542["ScoreboardRepository::load"]
+        dq_rust_post_move_6371527073115412115["post_move"]
+    end
+    subgraph dq_typescript_17590752136195828226["TypeScript / React"]
+        dq_typescript_fetch_scoreboard_15748061361816878735["fetchScoreboard"]
+        dq_typescript_game_board_8802597478254287833["GameBoard"]
+        dq_typescript_scoreboard_6078417283652180166["Scoreboard"]
+        dq_typescript_submit_move_10974483998893280560["submitMove"]
+    end
+    dq_typescript_game_board_8802597478254287833 -->|calls| dq_typescript_submit_move_10974483998893280560
+    dq_typescript_scoreboard_6078417283652180166 -->|calls| dq_typescript_fetch_scoreboard_15748061361816878735
+    dq_rust_append_move_9732948563544519913 -->|writes| dq_postgres_score_events_13805139543050138578
+    dq_python_scoreboard_rollup_16369290919900694612 -->|reads| dq_postgres_score_events_13805139543050138578
+    dq_python_scoreboard_rollup_16369290919900694612 -->|writes| dq_postgres_scoreboard_13956281663795589106
+    dq_rust_load_scoreboard_11564804444726144542 -->|reads| dq_postgres_scoreboard_13956281663795589106
+    dq_rust_post_move_6371527073115412115 -->|calls| dq_rust_apply_move_11777149626505909155
+    dq_rust_apply_move_11777149626505909155 -->|calls| dq_rust_append_move_9732948563544519913
+    dq_rust_get_scoreboard_4805843812433240324 -->|calls| dq_rust_load_scoreboard_11564804444726144542
+    dq_python_scoreboard_rollup_16369290919900694612 -->|calls| dq_python_calculate_scores_16618218432669764009
+    dq_typescript_submit_move_10974483998893280560 -->|consumes| dq_contracts_submit_move_11046259526442527102
+    dq_typescript_fetch_scoreboard_15748061361816878735 -->|consumes| dq_contracts_get_scoreboard_6237516921235096133
+    dq_rust_post_move_6371527073115412115 -->|provides| dq_contracts_submit_move_11046259526442527102
+    dq_rust_get_scoreboard_4805843812433240324 -->|provides| dq_contracts_get_scoreboard_6237516921235096133
+    style dq_contracts_get_scoreboard_6237516921235096133 fill:#e9d5ff
+    style dq_contracts_submit_move_11046259526442527102 fill:#e9d5ff
+    style dq_postgres_score_events_13805139543050138578 fill:#cbd5e1
+    style dq_postgres_scoreboard_13956281663795589106 fill:#cbd5e1
+    style dq_python_calculate_scores_16618218432669764009 fill:#bbf7d0
+    style dq_python_scoreboard_rollup_16369290919900694612 fill:#bbf7d0
+    style dq_rust_append_move_9732948563544519913 fill:#fed7aa
+    style dq_rust_apply_move_11777149626505909155 fill:#fed7aa
+    style dq_rust_get_scoreboard_4805843812433240324 fill:#fed7aa
+    style dq_rust_load_scoreboard_11564804444726144542 fill:#fed7aa
+    style dq_rust_post_move_6371527073115412115 fill:#fed7aa
+    style dq_typescript_fetch_scoreboard_15748061361816878735 fill:#dbeafe
+    style dq_typescript_game_board_8802597478254287833 fill:#dbeafe
+    style dq_typescript_scoreboard_6078417283652180166 fill:#dbeafe
+    style dq_typescript_submit_move_10974483998893280560 fill:#dbeafe
+    style dq_contracts_18314575617815111536 fill:#faf5ff
+    style dq_postgres_4257408974327174830 fill:#f8fafc
+    style dq_python_5848678681452990231 fill:#f0fdf4
+    style dq_rust_13834740431434729255 fill:#fff7ed
+    style dq_typescript_17590752136195828226 fill:#eff6ff
+    linkStyle 0 stroke:#475569
+    linkStyle 1 stroke:#475569
+    linkStyle 2 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 3 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 4 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 5 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 6 stroke:#475569
+    linkStyle 7 stroke:#475569
+    linkStyle 8 stroke:#475569
+    linkStyle 9 stroke:#475569
+    linkStyle 10 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 11 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 12 stroke:#0f766e,stroke-dasharray:4
+    linkStyle 13 stroke:#0f766e,stroke-dasharray:4

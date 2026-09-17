@@ -1,7 +1,0 @@
-flowchart LR
-    subgraph backend[Backend]
-        api[API]
-        db[(Database)]
-        api -->|query| db
-    end
-    client[Client] -->|request| api

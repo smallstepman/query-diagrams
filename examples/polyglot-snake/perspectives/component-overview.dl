@@ -1,0 +1,29 @@
+view_node(N, N) :- node(N, K, L, S), prop("node", N, "dq.level", "component").
+view_node(N, N) :- node(N, K, L, S), prop("node", N, "dq.level", "contract").
+view_node(N, N) :- node(N, K, L, S), prop("node", N, "dq.level", "resource").
+
+view_group("typescript", "TypeScript / React").
+view_group("rust", "Rust / Axum").
+view_group("python", "Python / Dagster").
+view_group("contracts", "HTTP contracts").
+view_group("postgres", "PostgreSQL").
+
+view_contains(G, K, N, 100) :- contains(G, K, N), view_node(N, N).
+view_edge(E, E, A, B) :- edge(E, K, A, B, L, D), view_node(A, A), view_node(B, B).
+
+view_style("group", "typescript", "fill", "#eff6ff", 100).
+view_style("group", "rust", "fill", "#fff7ed", 100).
+view_style("group", "python", "fill", "#f0fdf4", 100).
+view_style("group", "contracts", "fill", "#faf5ff", 100).
+view_style("group", "postgres", "fill", "#f8fafc", 100).
+
+view_style("node", N, "fill", "#dbeafe", 100) :- view_node(N, N), prop("node", N, "dq.layer", "frontend").
+view_style("node", N, "fill", "#fed7aa", 100) :- view_node(N, N), prop("node", N, "dq.layer", "backend").
+view_style("node", N, "fill", "#bbf7d0", 100) :- view_node(N, N), prop("node", N, "dq.layer", "pipeline").
+view_style("node", N, "fill", "#cbd5e1", 100) :- view_node(N, N), prop("node", N, "dq.layer", "database").
+view_style("node", N, "fill", "#e9d5ff", 100) :- view_node(N, N), prop("node", N, "dq.kind", "http.contract").
+view_style("node", N, "fill", "#cbd5e1", 100) :- view_node(N, N), prop("node", N, "dq.kind", "postgres.table").
+
+view_style("edge", E, "stroke", "#0f766e", 100) :- view_edge(E, E, A, B).
+view_style("edge", E, "stroke_dash", "4", 100) :- view_edge(E, E, A, B).
+view_option("direction", "LR", 100).

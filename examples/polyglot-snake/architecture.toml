@@ -1,0 +1,119 @@
+# This file is an input to a future collector, not a list of ordinary code
+# calls.  Local call edges should come from SCIP plus syntax/framework context.
+
+[workspace]
+id = "workspace://polyglot-snake"
+name = "polyglot-snake"
+description = "A TypeScript, Rust, Python, OpenAPI, and PostgreSQL architecture-indexing example"
+
+[outputs]
+directory = ".architecture"
+scip = ".architecture/scip"
+snapshots = ".architecture/snapshots"
+raw_facts = "expected/raw-facts.jsonl"
+graph = "expected/architecture.graph.json"
+d2 = "expected/architecture.d2"
+
+[annotations]
+prefix = "@arch"
+attachment = "nearest_enclosing_declaration"
+directives = ["edge", "node", "property"]
+typescript_comment = "JSDoc or block comment immediately before a declaration"
+rust_comment = "Rust doc comment immediately before a declaration"
+python_comment = "one physical line in a decorated function docstring"
+sql_comment = "SQL line comment immediately before a declaration"
+
+[[projects]]
+id = "web"
+language = "typescript"
+root = "apps/web"
+source_roots = ["src"]
+component = "component://web-client"
+scip_command = "scip-typescript index --cwd apps/web --output .architecture/scip/web.scip --no-progress-bar"
+
+[[projects]]
+id = "server"
+language = "rust"
+root = "services/game-server"
+source_roots = ["src"]
+component = "component://game-server"
+scip_command = "rust-analyzer scip services/game-server --output .architecture/scip/server.scip"
+
+[[projects]]
+id = "scoreboard"
+language = "python"
+root = "pipelines/scoreboard"
+source_roots = ["src"]
+component = "component://scoreboard-analysis"
+scip_command = "scip-python index --cwd pipelines/scoreboard --project-name polyglot-snake-scoreboard --output .architecture/scip/scoreboard.scip"
+
+[[components]]
+id = "component://web-client"
+label = "React web client"
+kind = "frontend"
+
+[[components]]
+id = "component://game-server"
+label = "Axum game server"
+kind = "backend"
+
+[[components]]
+id = "component://scoreboard-analysis"
+label = "Dagster scoreboard analysis"
+kind = "pipeline"
+
+[[components]]
+id = "component://snake-postgres"
+label = "Snake PostgreSQL"
+kind = "database"
+
+[[services]]
+id = "service://game-api"
+label = "Game API"
+component = "component://game-server"
+
+[[contract_sources]]
+kind = "openapi"
+file = "contracts/game-api.openapi.yaml"
+service = "service://game-api"
+
+[[data_sources]]
+kind = "postgres-ddl"
+file = "db/migrations/0001_scores.sql"
+database = "component://snake-postgres"
+
+[normalization.http]
+path_parameter_style = "openapi-template"
+strip_base_urls = ["http://localhost:3000", "${VITE_API_BASE}"]
+method_case = "upper"
+
+[normalization.sql]
+default_schema = "public"
+qualify_unqualified_tables = true
+fold_unquoted_identifiers = "lower"
+
+[code_ids]
+format = "code://snake/{project}/{path}#{symbol}"
+include_line_numbers = false
+
+[environments.local]
+vite_api_base = "http://localhost:3000"
+database_url_env = "DATABASE_URL"
+
+[aliases.http]
+"POST /v1/games/{game_id}/moves" = "contract://http/game-api/submit-move"
+"GET /v1/scoreboard" = "contract://http/game-api/get-scoreboard"
+
+[aliases.database]
+"score_events" = "data://postgres/snake/public/score_events"
+"public.score_events" = "data://postgres/snake/public/score_events"
+"scoreboard" = "data://postgres/snake/public/scoreboard"
+"public.scoreboard" = "data://postgres/snake/public/scoreboard"
+
+[[asserted_facts]]
+kind = "runs_on"
+from = "component://scoreboard-analysis"
+to = "runtime://dagster/snake"
+provenance = "architecture.toml"
+evidence = "The Dagster deployment is operational configuration, not a local code call."
+confidence = "asserted"
